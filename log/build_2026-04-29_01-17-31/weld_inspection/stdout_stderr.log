@@ -1,0 +1,46 @@
+running egg_info
+creating ../../build/weld_inspection/weld_inspection.egg-info
+writing ../../build/weld_inspection/weld_inspection.egg-info/PKG-INFO
+writing dependency_links to ../../build/weld_inspection/weld_inspection.egg-info/dependency_links.txt
+writing entry points to ../../build/weld_inspection/weld_inspection.egg-info/entry_points.txt
+writing requirements to ../../build/weld_inspection/weld_inspection.egg-info/requires.txt
+writing top-level names to ../../build/weld_inspection/weld_inspection.egg-info/top_level.txt
+writing manifest file '../../build/weld_inspection/weld_inspection.egg-info/SOURCES.txt'
+reading manifest file '../../build/weld_inspection/weld_inspection.egg-info/SOURCES.txt'
+writing manifest file '../../build/weld_inspection/weld_inspection.egg-info/SOURCES.txt'
+running build
+running build_py
+creating /home/svanik/ros2_ws/build/weld_inspection/build
+creating /home/svanik/ros2_ws/build/weld_inspection/build/lib
+creating /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection
+copying weld_inspection/spawn_welds_node.py -> /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection
+copying weld_inspection/__init__.py -> /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection
+copying weld_inspection/weld_inspector_node.py -> /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection
+running install
+running install_lib
+creating /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection
+copying /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection/spawn_welds_node.py -> /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection
+copying /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection/__init__.py -> /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection
+copying /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection/weld_inspector_node.py -> /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection
+byte-compiling /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection/spawn_welds_node.py to spawn_welds_node.cpython-310.pyc
+byte-compiling /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection/weld_inspector_node.py to weld_inspector_node.cpython-310.pyc
+running install_data
+creating /home/svanik/ros2_ws/install/weld_inspection/share/ament_index
+creating /home/svanik/ros2_ws/install/weld_inspection/share/ament_index/resource_index
+creating /home/svanik/ros2_ws/install/weld_inspection/share/ament_index/resource_index/packages
+copying resource/weld_inspection -> /home/svanik/ros2_ws/install/weld_inspection/share/ament_index/resource_index/packages
+copying package.xml -> /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection
+creating /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/launch
+copying launch/weld_inspection.launch.py -> /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/launch
+creating /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/config
+copying config/weld_inspection.rviz -> /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/config
+creating /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/worlds
+copying worlds/weld_inspection.sdf -> /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/worlds
+creating /home/svanik/ros2_ws/install/weld_inspection/share/weld_inspection/models
+running install_egg_info
+Copying ../../build/weld_inspection/weld_inspection.egg-info to /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection-0.0.0-py3.10.egg-info
+running install_scripts
+Installing spawn_welds_node script to /home/svanik/ros2_ws/install/weld_inspection/lib/weld_inspection
+Installing weld_inspector_node script to /home/svanik/ros2_ws/install/weld_inspection/lib/weld_inspection
+writing list of installed files to '/home/svanik/ros2_ws/build/weld_inspection/install.log'

@@ -1,0 +1,28 @@
+[0.349s] Invoking command in '/home/svanik/ros2_ws/src/weld_inspection': PYTHONPATH=/home/svanik/ros2_ws/build/weld_inspection/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/weld_inspection build --build-base /home/svanik/ros2_ws/build/weld_inspection/build install --record /home/svanik/ros2_ws/build/weld_inspection/install.log --single-version-externally-managed install_data
+[0.486s] running egg_info
+[0.487s] writing ../../build/weld_inspection/weld_inspection.egg-info/PKG-INFO
+[0.487s] writing dependency_links to ../../build/weld_inspection/weld_inspection.egg-info/dependency_links.txt
+[0.487s] writing entry points to ../../build/weld_inspection/weld_inspection.egg-info/entry_points.txt
+[0.487s] writing requirements to ../../build/weld_inspection/weld_inspection.egg-info/requires.txt
+[0.487s] writing top-level names to ../../build/weld_inspection/weld_inspection.egg-info/top_level.txt
+[0.488s] reading manifest file '../../build/weld_inspection/weld_inspection.egg-info/SOURCES.txt'
+[0.488s] writing manifest file '../../build/weld_inspection/weld_inspection.egg-info/SOURCES.txt'
+[0.488s] running build
+[0.489s] running build_py
+[0.489s] copying weld_inspection/spawn_welds_node.py -> /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection
+[0.489s] copying weld_inspection/weld_inspector_node.py -> /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection
+[0.489s] running install
+[0.489s] running install_lib
+[0.489s] copying /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection/spawn_welds_node.py -> /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection
+[0.489s] copying /home/svanik/ros2_ws/build/weld_inspection/build/lib/weld_inspection/weld_inspector_node.py -> /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection
+[0.489s] byte-compiling /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection/spawn_welds_node.py to spawn_welds_node.cpython-310.pyc
+[0.491s] byte-compiling /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection/weld_inspector_node.py to weld_inspector_node.cpython-310.pyc
+[0.492s] running install_data
+[0.492s] running install_egg_info
+[0.493s] removing '/home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection-0.0.0-py3.10.egg-info' (and everything under it)
+[0.493s] Copying ../../build/weld_inspection/weld_inspection.egg-info to /home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages/weld_inspection-0.0.0-py3.10.egg-info
+[0.494s] running install_scripts
+[0.505s] Installing spawn_welds_node script to /home/svanik/ros2_ws/install/weld_inspection/lib/weld_inspection
+[0.506s] Installing weld_inspector_node script to /home/svanik/ros2_ws/install/weld_inspection/lib/weld_inspection
+[0.506s] writing list of installed files to '/home/svanik/ros2_ws/build/weld_inspection/install.log'
+[0.521s] Invoked command in '/home/svanik/ros2_ws/src/weld_inspection' returned '0': PYTHONPATH=/home/svanik/ros2_ws/build/weld_inspection/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/svanik/ros2_ws/install/weld_inspection/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/weld_inspection build --build-base /home/svanik/ros2_ws/build/weld_inspection/build install --record /home/svanik/ros2_ws/build/weld_inspection/install.log --single-version-externally-managed install_data

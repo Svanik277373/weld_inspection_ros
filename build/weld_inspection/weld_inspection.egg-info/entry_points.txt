@@ -1,0 +1,4 @@
+[console_scripts]
+spawn_welds_node = weld_inspection.spawn_welds_node:main
+weld_inspector_node = weld_inspection.weld_inspector_node:main
+
