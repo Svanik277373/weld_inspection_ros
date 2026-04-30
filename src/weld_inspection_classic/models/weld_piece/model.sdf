@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="weld_piece">
+    <link name="link">
+      <inertial>
+        <mass>0.3</mass>
+        <inertia>
+          <ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>0.0001</iyy><iyz>0</iyz><izz>0.0002</izz>
+        </inertia>
+      </inertial>
+      
+      <!-- Base Plate -->
+      <collision name="col">
+        <geometry><box><size>0.15 0.1125 0.0225</size></box></geometry>
+        <surface>
+          <friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction>
+        </surface>
+      </collision>
+      <visual name="base">
+        <geometry><box><size>0.15 0.1125 0.0225</size></box></geometry>
+        <material><ambient>0.2 0.2 0.22 1</ambient></material>
+      </visual>
+
+      <!-- Raised Weld Strip -->
+      <visual name="weld_bead">
+        <pose>0 0 0.012 0 0 0</pose>
+        <geometry><box><size>0.15 0.015 0.005</size></box></geometry>
+        <material><ambient>0.6 0.45 0.25 1</ambient></material>
+      </visual>
+    </link>
+  </model>
+</sdf>

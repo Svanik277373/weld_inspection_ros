@@ -1,0 +1,120 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="weld_inspection_world">
+    
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- THE MISSING MAGIC: Exposes /gazebo/set_entity_state -->
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+    </plugin>
+
+    <!-- The Official IFRA Conveyor Belt -->
+    <include>
+      <uri>model://conveyor_belt</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <!-- ================= FACTORY ELEMENTS ================= -->
+
+    <!-- Detection Chamber -->
+    <model name="detection_chamber">
+      <static>true</static>
+      <!-- Left Wall -->
+      <link name="wall_left">
+        <pose>-0.25 0 0.86 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient></material></visual>
+      </link>
+      <!-- Right Wall -->
+      <link name="wall_right">
+        <pose>0.25 0 0.86 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient></material></visual>
+      </link>
+      <!-- Roof -->
+      <link name="roof">
+        <pose>0 0 0.97 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.52 0.3 0.02</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
+      </link>
+    </model>
+
+    <!-- Camera inside the Chamber -->
+    <model name="camera_model">
+      <static>true</static>
+      <pose>0 0 0.95 0 1.5708 0</pose>
+      <link name="camera_link">
+        <sensor name="weld_camera" type="camera">
+          <always_on>1</always_on>
+          <update_rate>10</update_rate>
+          <camera>
+            <horizontal_fov>0.80</horizontal_fov>
+            <image><width>640</width><height>480</height><format>R8G8B8</format></image>
+            <clip><near>0.01</near><far>3.0</far></clip>
+          </camera>
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0.0</updateRate>
+            <cameraName>weld_camera</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>camera_link</frameName>
+          </plugin>
+        </sensor>
+      </link>
+    </model>
+
+    <!-- Status Panel Stand -->
+    <model name="status_stand">
+      <static>true</static>
+      <link name="pole">
+        <pose>0.4 0.15 0.4 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.05 0.05 0.8</size></box></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
+      </link>
+      <link name="screen">
+        <pose>0.4 0.15 0.85 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.02 0.2 0.15</size></box></geometry><material><ambient>0.0 0.0 0.0 1</ambient></material></visual>
+      </link>
+    </model>
+
+    <!-- Dynamic Indicators (Hidden underground initially) -->
+    <model name="indicator_green">
+      <static>true</static>
+      <pose>0.38 0.15 -1.0 0 0 0</pose>
+      <link name="link">
+        <visual name="v"><geometry><box><size>0.025 0.18 0.13</size></box></geometry><material><ambient>0 1 0 1</ambient><emissive>0 1 0 1</emissive></material></visual>
+      </link>
+    </model>
+
+    <model name="indicator_red">
+      <static>true</static>
+      <pose>0.38 0.15 -1.0 0 0 0</pose>
+      <link name="link">
+        <visual name="v"><geometry><box><size>0.025 0.18 0.13</size></box></geometry><material><ambient>1 0 0 1</ambient><emissive>1 0 0 1</emissive></material></visual>
+      </link>
+    </model>
+
+    <!-- Sorting Bins -->
+    <model name="good_bin">
+      <static>true</static>
+      <pose>0.0 0.8 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="v"><geometry><box><size>0.4 0.3 0.2</size></box></geometry><material><ambient>0 0.4 0 1</ambient></material></visual>
+      </link>
+    </model>
+
+    <model name="bad_bin">
+      <static>true</static>
+      <pose>-0.4 0.4 0.1 0 0 0</pose>
+      <link name="link">
+        <visual name="v"><geometry><box><size>0.3 0.4 0.2</size></box></geometry><material><ambient>0.4 0 0 1</ambient></material></visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
