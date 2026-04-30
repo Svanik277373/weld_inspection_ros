@@ -2,18 +2,12 @@
 <sdf version="1.6">
   <world name="weld_inspection_world">
     
-    <include>
-      <uri>model://sun</uri>
-    </include>
-    <include>
-      <uri>model://ground_plane</uri>
-    </include>
+    <include><uri>model://sun</uri></include>
+    <include><uri>model://ground_plane</uri></include>
 
-    <!-- THE MISSING MAGIC: Exposes /gazebo/set_entity_state -->
+    <!-- Exposes /gazebo/set_entity_state -->
     <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
-      <ros>
-        <namespace>/gazebo</namespace>
-      </ros>
+      <ros><namespace>/gazebo</namespace></ros>
     </plugin>
 
     <!-- The Official IFRA Conveyor Belt -->
@@ -22,29 +16,32 @@
       <pose>0 0 0 0 0 0</pose>
     </include>
 
-    <!-- ================= FACTORY ELEMENTS ================= -->
+    <!-- General Area Light (Replaces the broken spotlight) -->
+    <light type="point" name="chamber_light">
+      <pose>0 0 1.5 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>4.0</range><constant>0.2</constant><linear>0.1</linear><quadratic>0.01</quadratic></attenuation>
+    </light>
 
-    <!-- Detection Chamber -->
+    <!-- Detection Chamber (Y=0.0) -->
     <model name="detection_chamber">
       <static>true</static>
-      <!-- Left Wall -->
       <link name="wall_left">
         <pose>-0.25 0 0.86 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient></material></visual>
+        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
       </link>
-      <!-- Right Wall -->
       <link name="wall_right">
         <pose>0.25 0 0.86 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry><material><ambient>0.4 0.4 0.4 1</ambient></material></visual>
+        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
       </link>
-      <!-- Roof -->
       <link name="roof">
         <pose>0 0 0.97 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.52 0.3 0.02</size></box></geometry><material><ambient>0.2 0.2 0.2 1</ambient></material></visual>
+        <visual name="v"><geometry><box><size>0.52 0.3 0.02</size></box></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
       </link>
     </model>
 
-    <!-- Camera inside the Chamber -->
+    <!-- Camera inside Chamber -->
     <model name="camera_model">
       <static>true</static>
       <pose>0 0 0.95 0 1.5708 0</pose>
@@ -69,23 +66,22 @@
       </link>
     </model>
 
-    <!-- Status Panel Stand -->
+    <!-- Status Panel Stand (Moved next to chamber) -->
     <model name="status_stand">
       <static>true</static>
       <link name="pole">
-        <pose>0.4 0.15 0.4 0 0 0</pose>
+        <pose>0.4 0.0 0.4 0 0 0</pose>
         <visual name="v"><geometry><box><size>0.05 0.05 0.8</size></box></geometry><material><ambient>0.1 0.1 0.1 1</ambient></material></visual>
       </link>
       <link name="screen">
-        <pose>0.4 0.15 0.85 0 0 0</pose>
+        <pose>0.4 0.0 0.85 0 0 0</pose>
         <visual name="v"><geometry><box><size>0.02 0.2 0.15</size></box></geometry><material><ambient>0.0 0.0 0.0 1</ambient></material></visual>
       </link>
     </model>
 
-    <!-- Dynamic Indicators (Hidden underground initially) -->
     <model name="indicator_green">
       <static>true</static>
-      <pose>0.38 0.15 -1.0 0 0 0</pose>
+      <pose>0.38 0.0 -1.0 0 0 0</pose>
       <link name="link">
         <visual name="v"><geometry><box><size>0.025 0.18 0.13</size></box></geometry><material><ambient>0 1 0 1</ambient><emissive>0 1 0 1</emissive></material></visual>
       </link>
@@ -93,26 +89,56 @@
 
     <model name="indicator_red">
       <static>true</static>
-      <pose>0.38 0.15 -1.0 0 0 0</pose>
+      <pose>0.38 0.0 -1.0 0 0 0</pose>
       <link name="link">
         <visual name="v"><geometry><box><size>0.025 0.18 0.13</size></box></geometry><material><ambient>1 0 0 1</ambient><emissive>1 0 0 1</emissive></material></visual>
       </link>
     </model>
 
-    <!-- Sorting Bins -->
-    <model name="good_bin">
-      <static>true</static>
-      <pose>0.0 0.8 0.1 0 0 0</pose>
+    <!-- Pneumatic Diverter (Y=0.4) -->
+    <model name="pneumatic_pusher">
+      <static>false</static>
+      <pose>0.3 0.4 0.78 0 0 0</pose>
       <link name="link">
-        <visual name="v"><geometry><box><size>0.4 0.3 0.2</size></box></geometry><material><ambient>0 0.4 0 1</ambient></material></visual>
+        <kinematic>true</kinematic>
+        <visual name="v"><geometry><box><size>0.2 0.05 0.05</size></box></geometry><material><ambient>0.8 0.8 0.8 1</ambient></material></visual>
+        <collision name="c"><geometry><box><size>0.2 0.05 0.05</size></box></geometry></collision>
       </link>
     </model>
 
+    <!-- Good Bin (Catches pieces falling off the end of belt at Y=0.6) -->
+    <model name="good_bin">
+      <static>true</static>
+      <pose>0.0 0.8 0.15 0 0 0</pose>
+      <link name="link">
+        <collision name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry></collision>
+        <visual name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry><material><ambient>0.1 0.4 0.1 1</ambient></material></visual>
+        <collision name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
+        <visual name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry><material><ambient>0.1 0.4 0.1 1</ambient></material></visual>
+        <collision name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
+        <visual name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry><material><ambient>0.1 0.4 0.1 1</ambient></material></visual>
+        <collision name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
+        <visual name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry><material><ambient>0.1 0.4 0.1 1</ambient></material></visual>
+        <collision name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
+        <visual name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry><material><ambient>0.1 0.4 0.1 1</ambient></material></visual>
+      </link>
+    </model>
+
+    <!-- Bad Bin (Catches pieces pushed off the side at Y=0.4) -->
     <model name="bad_bin">
       <static>true</static>
-      <pose>-0.4 0.4 0.1 0 0 0</pose>
+      <pose>-0.4 0.4 0.15 0 0 0</pose>
       <link name="link">
-        <visual name="v"><geometry><box><size>0.3 0.4 0.2</size></box></geometry><material><ambient>0.4 0 0 1</ambient></material></visual>
+        <collision name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry></collision>
+        <visual name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry><material><ambient>0.5 0.1 0.1 1</ambient></material></visual>
+        <collision name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
+        <visual name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry><material><ambient>0.5 0.1 0.1 1</ambient></material></visual>
+        <collision name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
+        <visual name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry><material><ambient>0.5 0.1 0.1 1</ambient></material></visual>
+        <collision name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
+        <visual name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry><material><ambient>0.5 0.1 0.1 1</ambient></material></visual>
+        <collision name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
+        <visual name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry><material><ambient>0.5 0.1 0.1 1</ambient></material></visual>
       </link>
     </model>
 

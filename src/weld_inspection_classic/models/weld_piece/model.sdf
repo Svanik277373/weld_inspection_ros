@@ -10,7 +10,7 @@
         </inertia>
       </inertial>
       
-      <!-- Base Plate -->
+      <!-- Base Plate (Scaled to 0.75) -->
       <collision name="col">
         <geometry><box><size>0.15 0.1125 0.0225</size></box></geometry>
         <surface>
@@ -19,12 +19,12 @@
       </collision>
       <visual name="base">
         <geometry><box><size>0.15 0.1125 0.0225</size></box></geometry>
-        <material><ambient>0.2 0.2 0.22 1</ambient></material>
+        <material><ambient>0.28 0.28 0.30 1</ambient></material>
       </visual>
 
       <!-- Raised Weld Strip -->
       <visual name="weld_bead">
-        <pose>0 0 0.012 0 0 0</pose>
+        <pose>0 0 0.0125 0 0 0</pose>
         <geometry><box><size>0.15 0.015 0.005</size></box></geometry>
         <material><ambient>0.6 0.45 0.25 1</ambient></material>
       </visual>
