@@ -19,6 +19,8 @@ setup(
         (os.path.join('share', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
         (os.path.join('share', package_name, 'models', 'weld_piece'), glob('models/weld_piece/*')),
+        (os.path.join('share', package_name, 'models', 'our_factory_workshop'), glob('models/our_factory_workshop/*.*')),
+        (os.path.join('share', package_name, 'models', 'our_factory_workshop', 'meshes'), glob('models/our_factory_workshop/meshes/*')),
     ],
     entry_points={
         'console_scripts': [

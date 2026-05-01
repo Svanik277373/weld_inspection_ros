@@ -1,52 +1,242 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="weld_inspection_world">
-    
-    <include><uri>model://sun</uri></include>
-    <include><uri>model://ground_plane</uri></include>
 
-    <!-- Exposes /gazebo/set_entity_state for the Python Orchestrator -->
+    <scene>
+      <ambient>0.25 0.25 0.25 1</ambient>
+      <background>0.08 0.08 0.08 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.81</gravity>
+    </physics>
+
     <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
       <ros><namespace>/gazebo</namespace></ros>
     </plugin>
 
-    <!-- The Official IFRA Conveyor Belt -->
+    <include><uri>model://ground_plane</uri></include>
+
+    <include>
+      <uri>model://our_factory_workshop</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <!-- ============================================================ -->
+    <!-- FACTORY SHELL: floor, walls, ceiling                         -->
+    <!-- Room 10 x 12 x 4 m, conveyor centred at origin              -->
+    <!-- ============================================================ -->
+    <model name="factory_floor">
+      <static>true</static>
+      <link name="link">
+        <pose>0 0 0.005 0 0 0</pose>
+        <visual name="v">
+          <geometry><box><size>10 12 0.01</size></box></geometry>
+          <material>
+            <ambient>0.38 0.38 0.38 1</ambient>
+            <diffuse>0.42 0.42 0.42 1</diffuse>
+            <specular>0.08 0.08 0.08 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="factory_shell">
+      <static>true</static>
+      <link name="wall_back">
+        <pose>0 -6 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>10 0.2 4</size></box></geometry>
+          <material><ambient>0.52 0.52 0.52 1</ambient><diffuse>0.58 0.58 0.58 1</diffuse></material></visual>
+        <collision name="c"><geometry><box><size>10 0.2 4</size></box></geometry></collision>
+      </link>
+      <link name="wall_front">
+        <pose>0 6 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>10 0.2 4</size></box></geometry>
+          <material><ambient>0.52 0.52 0.52 1</ambient><diffuse>0.58 0.58 0.58 1</diffuse></material></visual>
+        <collision name="c"><geometry><box><size>10 0.2 4</size></box></geometry></collision>
+      </link>
+      <link name="wall_left">
+        <pose>-5 0 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.2 12 4</size></box></geometry>
+          <material><ambient>0.52 0.52 0.52 1</ambient><diffuse>0.58 0.58 0.58 1</diffuse></material></visual>
+        <collision name="c"><geometry><box><size>0.2 12 4</size></box></geometry></collision>
+      </link>
+      <link name="wall_right">
+        <pose>5 0 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.2 12 4</size></box></geometry>
+          <material><ambient>0.52 0.52 0.52 1</ambient><diffuse>0.58 0.58 0.58 1</diffuse></material></visual>
+        <collision name="c"><geometry><box><size>0.2 12 4</size></box></geometry></collision>
+      </link>
+      <link name="ceiling">
+        <pose>0 0 4 0 0 0</pose>
+        <visual name="v"><geometry><box><size>10 12 0.1</size></box></geometry>
+          <material><ambient>0.3 0.3 0.3 1</ambient><diffuse>0.35 0.35 0.35 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- STRUCTURAL: columns + overhead beams                         -->
+    <!-- ============================================================ -->
+    <model name="structural_columns">
+      <static>true</static>
+      <link name="col_nw"><pose>-3 -3 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.15 0.15 4</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+      </link>
+      <link name="col_ne"><pose>3 -3 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.15 0.15 4</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+      </link>
+      <link name="col_sw"><pose>-3 3 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.15 0.15 4</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+      </link>
+      <link name="col_se"><pose>3 3 2 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.15 0.15 4</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <model name="overhead_beams">
+      <static>true</static>
+      <link name="beam1"><pose>0 -3 3.82 0 0 0</pose>
+        <visual name="v"><geometry><box><size>6.3 0.25 0.22</size></box></geometry>
+          <material><ambient>0.18 0.18 0.18 1</ambient><diffuse>0.22 0.22 0.22 1</diffuse></material></visual>
+      </link>
+      <link name="beam2"><pose>0 0 3.82 0 0 0</pose>
+        <visual name="v"><geometry><box><size>6.3 0.25 0.22</size></box></geometry>
+          <material><ambient>0.18 0.18 0.18 1</ambient><diffuse>0.22 0.22 0.22 1</diffuse></material></visual>
+      </link>
+      <link name="beam3"><pose>0 3 3.82 0 0 0</pose>
+        <visual name="v"><geometry><box><size>6.3 0.25 0.22</size></box></geometry>
+          <material><ambient>0.18 0.18 0.18 1</ambient><diffuse>0.22 0.22 0.22 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- OVERHEAD INDUSTRIAL LIGHTS (6 fixtures + point lights)       -->
+    <!-- ============================================================ -->
+    <model name="light_fixtures">
+      <static>true</static>
+      <link name="f1"><pose>-2 -3 3.72 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.65 0.15 0.07</size></box></geometry>
+          <material><ambient>0.95 0.95 0.85 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse></material></visual>
+      </link>
+      <link name="f2"><pose>2 -3 3.72 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.65 0.15 0.07</size></box></geometry>
+          <material><ambient>0.95 0.95 0.85 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse></material></visual>
+      </link>
+      <link name="f3"><pose>-2 0 3.72 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.65 0.15 0.07</size></box></geometry>
+          <material><ambient>0.95 0.95 0.85 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse></material></visual>
+      </link>
+      <link name="f4"><pose>2 0 3.72 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.65 0.15 0.07</size></box></geometry>
+          <material><ambient>0.95 0.95 0.85 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse></material></visual>
+      </link>
+      <link name="f5"><pose>-2 3 3.72 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.65 0.15 0.07</size></box></geometry>
+          <material><ambient>0.95 0.95 0.85 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse></material></visual>
+      </link>
+      <link name="f6"><pose>2 3 3.72 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.65 0.15 0.07</size></box></geometry>
+          <material><ambient>0.95 0.95 0.85 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <light type="point" name="overhead_1">
+      <pose>-2 -3 3.6 0 0 0</pose>
+      <diffuse>0.88 0.88 0.82 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>9</range><constant>0.25</constant><linear>0.04</linear><quadratic>0.004</quadratic></attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light type="point" name="overhead_2">
+      <pose>2 -3 3.6 0 0 0</pose>
+      <diffuse>0.88 0.88 0.82 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>9</range><constant>0.25</constant><linear>0.04</linear><quadratic>0.004</quadratic></attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light type="point" name="overhead_3">
+      <pose>-2 0 3.6 0 0 0</pose>
+      <diffuse>0.88 0.88 0.82 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>9</range><constant>0.25</constant><linear>0.04</linear><quadratic>0.004</quadratic></attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light type="point" name="overhead_4">
+      <pose>2 0 3.6 0 0 0</pose>
+      <diffuse>0.88 0.88 0.82 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>9</range><constant>0.25</constant><linear>0.04</linear><quadratic>0.004</quadratic></attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light type="point" name="overhead_5">
+      <pose>-2 3 3.6 0 0 0</pose>
+      <diffuse>0.88 0.88 0.82 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>9</range><constant>0.25</constant><linear>0.04</linear><quadratic>0.004</quadratic></attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+    <light type="point" name="overhead_6">
+      <pose>2 3 3.6 0 0 0</pose>
+      <diffuse>0.88 0.88 0.82 1</diffuse><specular>0.2 0.2 0.2 1</specular>
+      <attenuation><range>9</range><constant>0.25</constant><linear>0.04</linear><quadratic>0.004</quadratic></attenuation>
+      <cast_shadows>false</cast_shadows>
+    </light>
+
+    <!-- Tight spotlight inside the inspection chamber -->
+    <light type="spot" name="chamber_spotlight">
+      <pose>0 0 1.2 0 0 0</pose>
+      <diffuse>1.0 1.0 1.0 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>0 0 -1</direction>
+      <attenuation><range>2.0</range><constant>0.05</constant><linear>0.02</linear><quadratic>0.001</quadratic></attenuation>
+      <spot><inner_angle>0.4</inner_angle><outer_angle>0.7</outer_angle><falloff>1.0</falloff></spot>
+    </light>
+
+    <!-- ============================================================ -->
+    <!-- CONVEYOR BELT                                                 -->
+    <!-- ============================================================ -->
     <include>
       <uri>model://conveyor_belt</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
 
-    <!-- Accurate Chamber Spotlight -->
-    <light type="spot" name="chamber_spotlight">
-      <pose>0 0 1.2 0 0 0</pose>
-      <diffuse>0.9 0.9 0.9 1</diffuse>
-      <specular>0.2 0.2 0.2 1</specular>
-      <direction>0 0 -1</direction>
-      <attenuation><range>2.0</range><constant>0.1</constant><linear>0.05</linear><quadratic>0.001</quadratic></attenuation>
-      <spot><inner_angle>0.5</inner_angle><outer_angle>0.8</outer_angle><falloff>1.0</falloff></spot>
-    </light>
-
-    <!-- Detection Chamber (Center of Belt: Y=0.0) -->
+    <!-- ============================================================ -->
+    <!-- INSPECTION CHAMBER (enhanced)                                -->
+    <!-- ============================================================ -->
     <model name="detection_chamber">
       <static>true</static>
       <link name="wall_left">
         <pose>-0.25 0 0.86 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry>
-        <material><script><name>Gazebo/DarkGrey</name></script></material></visual>
+        <visual name="v"><geometry><box><size>0.025 0.32 0.22</size></box></geometry>
+          <material><ambient>0.15 0.15 0.18 1</ambient><diffuse>0.2 0.2 0.22 1</diffuse></material></visual>
       </link>
       <link name="wall_right">
         <pose>0.25 0 0.86 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.02 0.3 0.2</size></box></geometry>
-        <material><script><name>Gazebo/DarkGrey</name></script></material></visual>
+        <visual name="v"><geometry><box><size>0.025 0.32 0.22</size></box></geometry>
+          <material><ambient>0.15 0.15 0.18 1</ambient><diffuse>0.2 0.2 0.22 1</diffuse></material></visual>
       </link>
       <link name="roof">
         <pose>0 0 0.97 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.52 0.3 0.02</size></box></geometry>
-        <material><script><name>Gazebo/Black</name></script></material></visual>
+        <visual name="v"><geometry><box><size>0.52 0.32 0.022</size></box></geometry>
+          <material><ambient>0.06 0.06 0.06 1</ambient><diffuse>0.08 0.08 0.08 1</diffuse></material></visual>
+      </link>
+      <!-- Blue-white LED strips on interior walls -->
+      <link name="led_left">
+        <pose>-0.236 0 0.86 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.004 0.30 0.18</size></box></geometry>
+          <material><ambient>0.6 0.75 1.0 1</ambient><diffuse>0.6 0.75 1.0 1</diffuse><emissive>0.25 0.35 0.55 1</emissive></material></visual>
+      </link>
+      <link name="led_right">
+        <pose>0.236 0 0.86 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.004 0.30 0.18</size></box></geometry>
+          <material><ambient>0.6 0.75 1.0 1</ambient><diffuse>0.6 0.75 1.0 1</diffuse><emissive>0.25 0.35 0.55 1</emissive></material></visual>
       </link>
     </model>
 
-    <!-- Internal Camera -->
+    <!-- Camera (unchanged — topic /weld_camera/image_raw) -->
     <model name="camera_model">
       <static>true</static>
       <pose>0 0 0.95 0 1.5708 0</pose>
@@ -68,61 +258,79 @@
       </link>
     </model>
 
-    <!-- Status Panel Stand -->
+    <!-- ============================================================ -->
+    <!-- HMI STATUS PANEL (pole + screen near sorter)                 -->
+    <!-- Indicators show at X=0.385, Y=0.36/0.44 — panel matches     -->
+    <!-- ============================================================ -->
     <model name="status_stand">
       <static>true</static>
       <link name="pole">
-        <pose>0.4 0.0 0.4 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.04 0.04 0.8</size></box></geometry>
-        <material><script><name>Gazebo/FlatBlack</name></script></material></visual>
+        <pose>0.42 0.40 0.4 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.05 0.05 0.8</size></box></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.14 0.14 0.14 1</diffuse></material></visual>
       </link>
-      <link name="screen_back">
-        <pose>0.4 0.0 0.85 0 0 0</pose>
-        <visual name="v"><geometry><box><size>0.02 0.2 0.15</size></box></geometry>
-        <material><script><name>Gazebo/Black</name></script></material></visual>
+      <link name="hmi_body">
+        <pose>0.41 0.40 0.88 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.05 0.28 0.22</size></box></geometry>
+          <material><ambient>0.08 0.08 0.1 1</ambient><diffuse>0.1 0.1 0.12 1</diffuse></material></visual>
       </link>
-    </model>
-
-    <!-- Moveable Indicators (Teleported by Python) -->
-    <model name="indicator_green">
-      <static>true</static>
-      <pose>0.38 0.0 -1.0 0 0 0</pose>
-      <link name="link">
-        <visual name="v"><geometry><box><size>0.01 0.18 0.13</size></box></geometry>
-        <material><script><name>Gazebo/GreenGlow</name></script></material></visual>
-      </link>
-    </model>
-    
-    <model name="indicator_red">
-      <static>true</static>
-      <pose>0.38 0.0 -1.0 0 0 0</pose>
-      <link name="link">
-        <visual name="v"><geometry><box><size>0.01 0.18 0.13</size></box></geometry>
-        <material><script><name>Gazebo/RedGlow</name></script></material></visual>
+      <link name="hmi_screen">
+        <pose>0.385 0.40 0.88 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.005 0.20 0.16</size></box></geometry>
+          <material><ambient>0.04 0.04 0.05 1</ambient><diffuse>0.05 0.05 0.06 1</diffuse></material></visual>
       </link>
     </model>
 
-    <!-- ========================================================= -->
-    <!-- STANDARD PNEUMATIC PUSHER MECHANISM                       -->
-    <!-- ========================================================= -->
-    
-    <!-- Static Housing (Looks like the Nytrol box) -->
+    <!-- Movable indicators — teleported by orchestrator_node -->
+    <!-- Names MUST match what orchestrator uses: movable_indicator_green/red -->
+    <model name="movable_indicator_green">
+      <static>false</static>
+      <pose>0.385 0.36 -1.0 0 0 0</pose>
+      <link name="link">
+        <kinematic>true</kinematic>
+        <visual name="v">
+          <geometry><box><size>0.008 0.08 0.06</size></box></geometry>
+          <material><ambient>0.0 0.85 0.0 1</ambient><diffuse>0.0 1.0 0.0 1</diffuse><emissive>0.0 0.55 0.0 1</emissive></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="movable_indicator_red">
+      <static>false</static>
+      <pose>0.385 0.44 -1.0 0 0 0</pose>
+      <link name="link">
+        <kinematic>true</kinematic>
+        <visual name="v">
+          <geometry><box><size>0.008 0.08 0.06</size></box></geometry>
+          <material><ambient>0.85 0.0 0.0 1</ambient><diffuse>1.0 0.0 0.0 1</diffuse><emissive>0.55 0.0 0.0 1</emissive></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- PNEUMATIC PUSHER                                              -->
+    <!-- ============================================================ -->
     <model name="pusher_housing">
       <static>true</static>
       <pose>0.45 0.4 0.78 0 0 0</pose>
       <link name="housing">
         <visual name="v"><geometry><box><size>0.3 0.2 0.15</size></box></geometry>
-        <material><script><name>Gazebo/Grey</name></script></material></visual>
+          <material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.3 0.32 0.38 1</diffuse></material></visual>
         <collision name="c"><geometry><box><size>0.3 0.2 0.15</size></box></geometry></collision>
       </link>
       <link name="leg">
-        <pose>0.0 0.0 -0.39 0 0 0</pose>
+        <pose>0 0 -0.39 0 0 0</pose>
         <visual name="v"><geometry><box><size>0.05 0.05 0.78</size></box></geometry>
-        <material><script><name>Gazebo/DarkGrey</name></script></material></visual>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.18 0.18 0.18 1</diffuse></material></visual>
+      </link>
+      <!-- Yellow warning stripe -->
+      <link name="stripe">
+        <pose>0 0 0.075 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.31 0.21 0.018</size></box></geometry>
+          <material><ambient>0.85 0.65 0.0 1</ambient><diffuse>1.0 0.78 0.0 1</diffuse></material></visual>
       </link>
     </model>
 
-    <!-- Kinematic Ram (Moved by Orchestrator) -->
     <model name="pusher_ram">
       <static>false</static>
       <pose>0.25 0.4 0.78 0 0 0</pose>
@@ -131,12 +339,12 @@
         <visual name="rod">
           <pose>0.05 0 0 0 0 0</pose>
           <geometry><box><size>0.1 0.02 0.02</size></box></geometry>
-          <material><script><name>Gazebo/Silver</name></script></material>
+          <material><ambient>0.58 0.58 0.62 1</ambient><diffuse>0.7 0.7 0.75 1</diffuse></material>
         </visual>
         <visual name="plate">
           <pose>-0.01 0 0 0 0 0</pose>
           <geometry><box><size>0.02 0.12 0.06</size></box></geometry>
-          <material><script><name>Gazebo/Silver</name></script></material>
+          <material><ambient>0.55 0.55 0.58 1</ambient><diffuse>0.65 0.65 0.7 1</diffuse></material>
         </visual>
         <collision name="c">
           <pose>-0.01 0 0 0 0 0</pose>
@@ -145,61 +353,213 @@
       </link>
     </model>
 
-    <!-- ========================================================= -->
-    <!-- SORTING BINS (Industrial Totes)                           -->
-    <!-- ========================================================= -->
-
-    <!-- Bad Bin (Catches pieces pushed off the side at Y=0.4) -->
+    <!-- ============================================================ -->
+    <!-- SORTING BINS                                                  -->
+    <!-- ============================================================ -->
     <model name="bad_bin">
       <static>true</static>
       <pose>-0.5 0.4 0.05 0 0 0</pose>
       <link name="link">
         <collision name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry></collision>
         <visual name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry>
-        <material><script><name>Gazebo/Red</name></script></material></visual>
-        
+          <material><ambient>0.55 0.07 0.07 1</ambient><diffuse>0.65 0.08 0.08 1</diffuse></material></visual>
         <collision name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
         <visual name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Red</name></script></material></visual>
-        
+          <material><ambient>0.55 0.07 0.07 1</ambient><diffuse>0.65 0.08 0.08 1</diffuse></material></visual>
         <collision name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
         <visual name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Red</name></script></material></visual>
-        
+          <material><ambient>0.55 0.07 0.07 1</ambient><diffuse>0.65 0.08 0.08 1</diffuse></material></visual>
         <collision name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
         <visual name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Red</name></script></material></visual>
-        
+          <material><ambient>0.55 0.07 0.07 1</ambient><diffuse>0.65 0.08 0.08 1</diffuse></material></visual>
         <collision name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
         <visual name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Red</name></script></material></visual>
+          <material><ambient>0.55 0.07 0.07 1</ambient><diffuse>0.65 0.08 0.08 1</diffuse></material></visual>
       </link>
     </model>
 
-    <!-- Good Bin (Catches pieces falling off the end of belt at Y=0.6) -->
     <model name="good_bin">
       <static>true</static>
       <pose>0.0 0.85 0.05 0 0 0</pose>
       <link name="link">
         <collision name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry></collision>
         <visual name="bottom"><geometry><box><size>0.4 0.4 0.02</size></box></geometry>
-        <material><script><name>Gazebo/Green</name></script></material></visual>
-        
+          <material><ambient>0.07 0.48 0.07 1</ambient><diffuse>0.08 0.58 0.08 1</diffuse></material></visual>
         <collision name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
         <visual name="w1"><pose>0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Green</name></script></material></visual>
-        
+          <material><ambient>0.07 0.48 0.07 1</ambient><diffuse>0.08 0.58 0.08 1</diffuse></material></visual>
         <collision name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry></collision>
         <visual name="w2"><pose>-0.19 0 0.15 0 0 0</pose><geometry><box><size>0.02 0.4 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Green</name></script></material></visual>
-        
+          <material><ambient>0.07 0.48 0.07 1</ambient><diffuse>0.08 0.58 0.08 1</diffuse></material></visual>
         <collision name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
         <visual name="w3"><pose>0 0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Green</name></script></material></visual>
-        
+          <material><ambient>0.07 0.48 0.07 1</ambient><diffuse>0.08 0.58 0.08 1</diffuse></material></visual>
         <collision name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry></collision>
         <visual name="w4"><pose>0 -0.19 0.15 0 0 0</pose><geometry><box><size>0.4 0.02 0.3</size></box></geometry>
-        <material><script><name>Gazebo/Green</name></script></material></visual>
+          <material><ambient>0.07 0.48 0.07 1</ambient><diffuse>0.08 0.58 0.08 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- SAFETY FLOOR MARKINGS (yellow hazard border around cell)     -->
+    <!-- ============================================================ -->
+    <model name="floor_markings">
+      <static>true</static>
+      <link name="strip_l"><pose>-0.65 0.1 0.012 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.07 2.2 0.002</size></box></geometry>
+          <material><ambient>0.78 0.62 0.0 1</ambient><diffuse>0.95 0.78 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="strip_r"><pose>0.65 0.1 0.012 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.07 2.2 0.002</size></box></geometry>
+          <material><ambient>0.78 0.62 0.0 1</ambient><diffuse>0.95 0.78 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="strip_back"><pose>0 -1.0 0.012 0 0 0</pose>
+        <visual name="v"><geometry><box><size>1.37 0.07 0.002</size></box></geometry>
+          <material><ambient>0.78 0.62 0.0 1</ambient><diffuse>0.95 0.78 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="strip_front"><pose>0 1.2 0.012 0 0 0</pose>
+        <visual name="v"><geometry><box><size>1.37 0.07 0.002</size></box></geometry>
+          <material><ambient>0.78 0.62 0.0 1</ambient><diffuse>0.95 0.78 0.0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- SAFETY BOLLARDS + RAILS (guard the conveyor cell)            -->
+    <!-- ============================================================ -->
+    <model name="safety_bollards">
+      <static>true</static>
+      <link name="b_bl"><pose>-1.0 -1.0 0.5 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.04</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.78 0.58 0.0 1</ambient><diffuse>0.95 0.72 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="b_br"><pose>1.0 -1.0 0.5 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.04</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.78 0.58 0.0 1</ambient><diffuse>0.95 0.72 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="b_fl"><pose>-1.0 1.2 0.5 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.04</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.78 0.58 0.0 1</ambient><diffuse>0.95 0.72 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="b_fr"><pose>1.0 1.2 0.5 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.04</radius><length>1.0</length></cylinder></geometry>
+          <material><ambient>0.78 0.58 0.0 1</ambient><diffuse>0.95 0.72 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="rail_back"><pose>0 -1.0 0.88 0 0 0</pose>
+        <visual name="v"><geometry><box><size>2.0 0.03 0.04</size></box></geometry>
+          <material><ambient>0.78 0.58 0.0 1</ambient><diffuse>0.95 0.72 0.0 1</diffuse></material></visual>
+      </link>
+      <link name="rail_front"><pose>0 1.2 0.88 0 0 0</pose>
+        <visual name="v"><geometry><box><size>2.0 0.03 0.04</size></box></geometry>
+          <material><ambient>0.78 0.58 0.0 1</ambient><diffuse>0.95 0.72 0.0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- BACKGROUND PROPS                                              -->
+    <!-- ============================================================ -->
+
+    <!-- Shelving rack — left back -->
+    <model name="shelf_rack_1">
+      <static>true</static>
+      <pose>-3.8 -2.5 0 0 0 0</pose>
+      <link name="link">
+        <visual name="ul"><pose>-0.65 0 1.0 0 0 0</pose><geometry><box><size>0.05 0.38 2.0</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+        <visual name="ur"><pose>0.65 0 1.0 0 0 0</pose><geometry><box><size>0.05 0.38 2.0</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+        <visual name="s1"><pose>0 0 0.38 0 0 0</pose><geometry><box><size>1.3 0.38 0.028</size></box></geometry>
+          <material><ambient>0.26 0.26 0.28 1</ambient><diffuse>0.3 0.3 0.34 1</diffuse></material></visual>
+        <visual name="s2"><pose>0 0 1.0 0 0 0</pose><geometry><box><size>1.3 0.38 0.028</size></box></geometry>
+          <material><ambient>0.26 0.26 0.28 1</ambient><diffuse>0.3 0.3 0.34 1</diffuse></material></visual>
+        <visual name="s3"><pose>0 0 1.62 0 0 0</pose><geometry><box><size>1.3 0.38 0.028</size></box></geometry>
+          <material><ambient>0.26 0.26 0.28 1</ambient><diffuse>0.3 0.3 0.34 1</diffuse></material></visual>
+        <visual name="box1"><pose>-0.3 0 0.52 0 0 0</pose><geometry><box><size>0.26 0.22 0.22</size></box></geometry>
+          <material><ambient>0.48 0.38 0.18 1</ambient><diffuse>0.58 0.46 0.22 1</diffuse></material></visual>
+        <visual name="box2"><pose>0.2 0 0.52 0 0 0</pose><geometry><box><size>0.26 0.22 0.22</size></box></geometry>
+          <material><ambient>0.38 0.48 0.28 1</ambient><diffuse>0.46 0.58 0.34 1</diffuse></material></visual>
+        <visual name="box3"><pose>-0.1 0 1.16 0 0 0</pose><geometry><box><size>0.32 0.3 0.24</size></box></geometry>
+          <material><ambient>0.48 0.38 0.18 1</ambient><diffuse>0.58 0.46 0.22 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Shelving rack — left mid -->
+    <model name="shelf_rack_2">
+      <static>true</static>
+      <pose>-3.8 0.5 0 0 0 0</pose>
+      <link name="link">
+        <visual name="ul"><pose>-0.65 0 1.0 0 0 0</pose><geometry><box><size>0.05 0.38 2.0</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+        <visual name="ur"><pose>0.65 0 1.0 0 0 0</pose><geometry><box><size>0.05 0.38 2.0</size></box></geometry>
+          <material><ambient>0.18 0.18 0.2 1</ambient><diffuse>0.22 0.22 0.25 1</diffuse></material></visual>
+        <visual name="s1"><pose>0 0 0.38 0 0 0</pose><geometry><box><size>1.3 0.38 0.028</size></box></geometry>
+          <material><ambient>0.26 0.26 0.28 1</ambient><diffuse>0.3 0.3 0.34 1</diffuse></material></visual>
+        <visual name="s2"><pose>0 0 1.0 0 0 0</pose><geometry><box><size>1.3 0.38 0.028</size></box></geometry>
+          <material><ambient>0.26 0.26 0.28 1</ambient><diffuse>0.3 0.3 0.34 1</diffuse></material></visual>
+        <visual name="s3"><pose>0 0 1.62 0 0 0</pose><geometry><box><size>1.3 0.38 0.028</size></box></geometry>
+          <material><ambient>0.26 0.26 0.28 1</ambient><diffuse>0.3 0.3 0.34 1</diffuse></material></visual>
+      </link>
+    </model>
+
+    <!-- Industrial drums — right side -->
+    <model name="storage_drums">
+      <static>true</static>
+      <link name="d1"><pose>3.5 -2.5 0.45 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.22</radius><length>0.9</length></cylinder></geometry>
+          <material><ambient>0.12 0.18 0.48 1</ambient><diffuse>0.15 0.22 0.58 1</diffuse></material></visual>
+        <collision name="c"><geometry><cylinder><radius>0.22</radius><length>0.9</length></cylinder></geometry></collision>
+      </link>
+      <link name="d2"><pose>3.15 -1.95 0.45 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.22</radius><length>0.9</length></cylinder></geometry>
+          <material><ambient>0.48 0.18 0.08 1</ambient><diffuse>0.58 0.22 0.1 1</diffuse></material></visual>
+        <collision name="c"><geometry><cylinder><radius>0.22</radius><length>0.9</length></cylinder></geometry></collision>
+      </link>
+      <link name="d3"><pose>3.5 -1.45 0.45 0 0 0</pose>
+        <visual name="v"><geometry><cylinder><radius>0.22</radius><length>0.9</length></cylinder></geometry>
+          <material><ambient>0.12 0.18 0.48 1</ambient><diffuse>0.15 0.22 0.58 1</diffuse></material></visual>
+        <collision name="c"><geometry><cylinder><radius>0.22</radius><length>0.9</length></cylinder></geometry></collision>
+      </link>
+    </model>
+
+    <!-- Electrical cabinet — right wall -->
+    <model name="electrical_cabinet">
+      <static>true</static>
+      <pose>3.5 0.0 0.9 0 0 0</pose>
+      <link name="link">
+        <visual name="body"><geometry><box><size>0.45 0.35 1.8</size></box></geometry>
+          <material><ambient>0.25 0.28 0.32 1</ambient><diffuse>0.3 0.32 0.38 1</diffuse></material></visual>
+        <collision name="c"><geometry><box><size>0.45 0.35 1.8</size></box></geometry></collision>
+        <visual name="door_panel"><pose>-0.228 0 0 0 0 0</pose><geometry><box><size>0.005 0.34 1.78</size></box></geometry>
+          <material><ambient>0.2 0.22 0.27 1</ambient><diffuse>0.24 0.26 0.32 1</diffuse></material></visual>
+        <!-- Status LEDs on door -->
+        <visual name="led_g"><pose>-0.228 -0.06 0.55 0 0 0</pose><geometry><sphere><radius>0.022</radius></sphere></geometry>
+          <material><ambient>0.0 0.75 0.0 1</ambient><diffuse>0.0 0.9 0.0 1</diffuse><emissive>0.0 0.5 0.0 1</emissive></material></visual>
+        <visual name="led_r"><pose>-0.228 0.06 0.55 0 0 0</pose><geometry><sphere><radius>0.022</radius></sphere></geometry>
+          <material><ambient>0.75 0.0 0.0 1</ambient><diffuse>0.9 0.0 0.0 1</diffuse><emissive>0.5 0.0 0.0 1</emissive></material></visual>
+        <visual name="led_y"><pose>-0.228 0.0 0.62 0 0 0</pose><geometry><sphere><radius>0.022</radius></sphere></geometry>
+          <material><ambient>0.75 0.65 0.0 1</ambient><diffuse>0.9 0.78 0.0 1</diffuse><emissive>0.5 0.4 0.0 1</emissive></material></visual>
+      </link>
+    </model>
+
+    <!-- Stacked pallets + crates — left front corner -->
+    <model name="pallets">
+      <static>true</static>
+      <pose>-3.5 3.2 0 0 0 0</pose>
+      <link name="p1"><pose>0 0 0.075 0 0 0</pose>
+        <visual name="v"><geometry><box><size>1.0 1.2 0.15</size></box></geometry>
+          <material><ambient>0.42 0.28 0.12 1</ambient><diffuse>0.52 0.35 0.18 1</diffuse></material></visual>
+        <collision name="c"><geometry><box><size>1.0 1.2 0.15</size></box></geometry></collision>
+      </link>
+      <link name="p2"><pose>0 0 0.225 0 0 0</pose>
+        <visual name="v"><geometry><box><size>1.0 1.2 0.15</size></box></geometry>
+          <material><ambient>0.42 0.28 0.12 1</ambient><diffuse>0.52 0.35 0.18 1</diffuse></material></visual>
+      </link>
+      <link name="crate1"><pose>-0.22 -0.2 0.58 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.38 0.48 0.42</size></box></geometry>
+          <material><ambient>0.48 0.38 0.18 1</ambient><diffuse>0.58 0.46 0.22 1</diffuse></material></visual>
+      </link>
+      <link name="crate2"><pose>0.22 0.18 0.58 0 0 0</pose>
+        <visual name="v"><geometry><box><size>0.38 0.48 0.42</size></box></geometry>
+          <material><ambient>0.36 0.48 0.26 1</ambient><diffuse>0.44 0.56 0.32 1</diffuse></material></visual>
       </link>
     </model>
 

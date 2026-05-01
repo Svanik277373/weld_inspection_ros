@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="our_factory_workshop">
+    <static>true</static> 
+    
+    <link name="base_link">
+      
+      <!-- ADD THIS DUMMY INERTIA BLOCK -->
+      <inertial>
+        <mass>1000.0</mass>
+        <inertia>
+          <ixx>1.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>1.0</izz>
+        </inertia>
+      </inertial>
+      
+      <!-- VISUAL: Using the STL and painting it grey -->
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://our_factory_workshop/meshes/factory.stl</uri>
+            <scale>1 1 1</scale> 
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/LightGrey</name>
+          </script>
+        </material>
+      </visual>
+
+      <!-- COLLISION: Using the exact same STL for physics -->
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://our_factory_workshop/meshes/factory.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      
+    </link>
+  </model>
+</sdf>
