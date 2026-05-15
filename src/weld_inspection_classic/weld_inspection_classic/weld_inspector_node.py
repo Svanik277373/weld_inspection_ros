@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import json
 import os
+import random
 import time
 import threading
+from collections import Counter
 from pathlib import Path
 import rclpy
 from rclpy.node import Node
@@ -77,12 +79,22 @@ class WeldInspectorNode(Node):
         super().__init__("weld_inspector")
         self.declare_parameter("model_path", str(Path.home() / "Downloads" / "weld_model.onnx"))
         self.declare_parameter("confidence_threshold", 0.25)
-        
+        self.declare_parameter(
+            "dataset_path",
+            str(Path.home() / "Downloads" / "dataset" /
+                "Weld quality inspection - Segmentation" / "train" / "labels")
+        )
+
         model_path = os.path.expanduser(self.get_parameter("model_path").value)
         self.conf_thresh = self.get_parameter("confidence_threshold").value
-        
+        dataset_path = self.get_parameter("dataset_path").value
+
         self._demo_mode = False
+        self._dataset_entries: list = []
         self._load_model(model_path)
+
+        if self._demo_mode:
+            self._load_dataset(dataset_path)
         
         self.bridge = CvBridge()
         self._latest_frame = None
@@ -106,14 +118,45 @@ class WeldInspectorNode(Node):
     def _load_model(self, path):
         p = Path(path)
         if not p.exists() or not ONNX_AVAILABLE:
-            self.get_logger().warn("Model not found or ONNX missing. Entering DEMO mode.")
+            self.get_logger().warn("Model not found or ONNX missing. Entering dataset mode.")
             self._demo_mode = True
             return
-            
+
         providers = ["CPUExecutionProvider"]
         self._session = ort.InferenceSession(str(p), providers=providers)
         self._input_name = self._session.get_inputs()[0].name
         self.get_logger().info("YOLO ONNX model loaded.")
+
+    def _load_dataset(self, label_dir: str):
+        p = Path(label_dir)
+        if not p.exists():
+            self.get_logger().warn(f"Dataset label dir not found: {p}")
+            return
+        good_entries, bad_entries = [], []
+        for lf in sorted(p.glob("*.txt")):
+            try:
+                classes = []
+                with open(lf) as f:
+                    for line in f:
+                        parts = line.strip().split()
+                        if parts:
+                            classes.append(int(parts[0]))
+                if not classes:
+                    continue
+                top_id, _ = Counter(classes).most_common(1)[0]
+                if CLASS_LABELS.get(top_id) == GOOD_LABEL:
+                    good_entries.append(classes)
+                else:
+                    bad_entries.append(classes)
+            except Exception:
+                pass
+        self._good_entries = good_entries
+        self._bad_entries  = bad_entries
+        self._dataset_entries = good_entries + bad_entries
+        self.get_logger().info(
+            f"Dataset mode: {len(good_entries)} good / {len(bad_entries)} bad samples "
+            f"(dispatch ratio 1 good : 2 bad)"
+        )
 
     def _image_cb(self, msg):
         try:
@@ -124,15 +167,30 @@ class WeldInspectorNode(Node):
             self.get_logger().error(f"CvBridge Error: {e}")
 
     def _tick(self):
-        with self._frame_lock:
-            frame = self._latest_frame
-            
-        if frame is None:
-            return
-            
         if self._demo_mode:
-            detections = []
+            if self._dataset_entries:
+                bucket = random.choices(
+                    [self._good_entries, self._bad_entries],
+                    weights=[1, 2]
+                )[0]
+                pool = bucket if bucket else self._dataset_entries
+                classes = random.choice(pool)
+                top_class_id, _ = Counter(classes).most_common(1)[0]
+                label = CLASS_LABELS.get(top_class_id, "Unknown")
+                conf = round(random.uniform(0.72, 0.95), 2)
+                detections = [{
+                    "class_id": top_class_id,
+                    "label": label,
+                    "confidence": conf,
+                    "box": [100, 100, 540, 380],
+                }]
+            else:
+                detections = []
         else:
+            with self._frame_lock:
+                frame = self._latest_frame
+            if frame is None:
+                return
             inp, _, _ = preprocess(frame)
             outputs = self._session.run(None, {self._input_name: inp})
             detections = parse_detections(outputs[0], self.conf_thresh)

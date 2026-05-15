@@ -539,6 +539,70 @@
           <material><ambient>0.75 0.65 0.0 1</ambient><diffuse>0.9 0.78 0.0 1</diffuse><emissive>0.5 0.4 0.0 1</emissive></material></visual>
       </link>
     </model>
+    <!-- A Basic Multi-Box Forklift -->
+    <model name="forklift">
+      <static>true</static>
+      <pose>2.0 -2.0 0 0 0 0</pose>
+      <link name="base_link">
+        
+        <!-- The Main Body -->
+        <visual name="body_visual">
+          <pose>0 0 0.5 0 0 0</pose>
+          <geometry>
+            <box><size>1.5 1.0 0.8</size></box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Yellow</name>
+            </script>
+          </material>
+        </visual>
+        
+        <!-- The Cabin -->
+        <visual name="cabin_visual">
+          <pose>-0.2 0 1.2 0 0 0</pose>
+          <geometry>
+            <box><size>0.8 0.8 0.8</size></box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/DarkGrey</name>
+            </script>
+          </material>
+        </visual>
+        
+        <!-- The Mast (Front pillar) -->
+        <visual name="mast_visual">
+          <pose>0.8 0 0.8 0 0 0</pose>
+          <geometry>
+            <box><size>0.1 0.8 1.6</size></box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Black</name>
+            </script>
+          </material>
+        </visual>
+        
+        <!-- The Forks -->
+        <visual name="forks_visual">
+          <pose>1.3 0 0.1 0 0 0</pose>
+          <geometry>
+            <box><size>1.0 0.6 0.05</size></box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+
+      </link>
+    </model>
 
     <!-- Stacked pallets + crates — left front corner -->
     <model name="pallets">
@@ -565,3 +629,4 @@
 
   </world>
 </sdf>
+
